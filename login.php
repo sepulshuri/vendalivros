@@ -1,28 +1,25 @@
 <?php
 session_start();
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    include 'Usuario.php';  
 
- 
-    $usuario = new Usuario("João Silva", "Rua X, 123", "987654321", "1990-01-01", "joao", "senha123");
+$usuarios = ["admin" => "123"];
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $login = $_POST['login'];
     $senha = $_POST['senha'];
 
-    if ($usuario->autenticar($login, $senha)) {
-        $_SESSION['usuario'] = $usuario;
-        header("Location: escolher_livros.php");
+    if (isset($usuarios[$login]) && $usuarios[$login] === $senha) {
+        $_SESSION['usuario'] = $login;
+        header("Location: index.php");
+        exit;
     } else {
-        echo "Login ou senha inválidos!";
+        echo "<p>Login ou senha incorretos!</p>";
     }
 }
 ?>
 
-<form method="POST" action="login.php">
-    <h2>Login</h2>
+<h2>Login</h2>
+<form method="post">
     Login: <input type="text" name="login" required><br>
     Senha: <input type="password" name="senha" required><br>
-    <button type="submit">Entrar</button>
+    <input type="submit" value="Entrar">
 </form>
-
-<p>Não tem uma conta? <a href="cadastro.php">Cadastre-se</a></p>
